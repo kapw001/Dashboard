@@ -6,6 +6,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,6 +27,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -83,8 +85,8 @@ public class DashboardActivity extends AppCompatActivity
 
     private RecyclerView schoolSelectedListView;
 
-    private GridViewRecyclerAdapter gridViewRecyclerAdapter;
 
+    private GridViewRecyclerAdapter gridViewRecyclerAdapter;
     private List<SchoolList> schoolListList;
 
     private ImageView leftarrow, rightarrow;
@@ -96,6 +98,15 @@ public class DashboardActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Check if the version of Android is Lollipop or higher
+        if (Build.VERSION.SDK_INT >= 21) {
+
+            // Set the status bar to dark-semi-transparentish
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+
+        }
         setContentView(R.layout.activity_dashboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -296,13 +307,30 @@ public class DashboardActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.filter:
-                startActivity(new Intent(DashboardActivity.this, FilterActivity.class));
+                startActivityForResult(new Intent(DashboardActivity.this, FilterActivity.class), 2);
                 overridePendingTransition(R.animator.enter, R.animator.exit);
 //                Toast.makeText(getApplicationContext(), "Item 1 Selected", Toast.LENGTH_LONG).show();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Toast.makeText(this, "Called", Toast.LENGTH_SHORT).show();
+
+        if (requestCode == 2) {
+            List<String> schoolList = data.getStringArrayListExtra("school_list");
+            for (int i = 0; i < schoolList.size(); i++) {
+
+                Log.e(TAG, "onActivityResult: " + schoolList.get(i));
+
+            }
+
         }
     }
 

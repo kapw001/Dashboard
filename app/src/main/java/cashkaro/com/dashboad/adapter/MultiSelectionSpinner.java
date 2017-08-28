@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -146,6 +147,16 @@ public class MultiSelectionSpinner extends android.support.v7.widget.AppCompatSp
 
     public List<String> getSelectedStrings() {
         List<String> selection = new LinkedList<String>();
+        for (int i = 0; i < _items.length; ++i) {
+            if (mSelection[i]) {
+                selection.add(_items[i]);
+            }
+        }
+        return selection;
+    }
+
+    public ArrayList<String> getSelectedList() {
+        ArrayList<String> selection = new ArrayList<>();
         for (int i = 0; i < _items.length; ++i) {
             if (mSelection[i]) {
                 selection.add(_items[i]);
